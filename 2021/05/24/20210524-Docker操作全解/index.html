@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.svg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.svg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-corner-indicator.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一文带你从小白到熟练使用Docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker操作全解">
+<meta property="og:url" content="http://example.com/2021/05/24/20210524-Docker%E6%93%8D%E4%BD%9C%E5%85%A8%E8%A7%A3/index.html">
+<meta property="og:site_name" content="魚安行の博客">
+<meta property="og:description" content="一文带你从小白到熟练使用Docker">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-24T12:09:12.000Z">
+<meta property="article:modified_time" content="2021-05-24T14:41:32.080Z">
+<meta property="article:author" content="魚安行">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2021/05/24/20210524-Docker%E6%93%8D%E4%BD%9C%E5%85%A8%E8%A7%A3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Docker操作全解 | 魚安行の博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">魚安行の博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/24/20210524-Docker%E6%93%8D%E4%BD%9C%E5%85%A8%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="魚安行">
+      <meta itemprop="description" content=" <hr> 你永远得不到你想要的,<br> 因为没有什么是你真正想要的,<br> 你内心无法填满的缺憾、不满足感,<br> 不是因为你没有得到,<br> 而是因为你那颗无常心尚未安顿好。<br> <br> 我们必须从只想着自己转变为前调自我以外的世界 <hr> ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="魚安行の博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Docker操作全解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-05-24 20:09:12 / 修改时间：22:41:32" itemprop="dateCreated datePublished" datetime="2021-05-24T20:09:12+08:00">2021-05-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">运维</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+            <div class="post-description">一文带你从小白到熟练使用Docker</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h2><blockquote>
+<p>当下微服务技术如火如荼，而不管是实现微服务还是分布式集群都需要依赖容器技术将应用容器化。这是一篇入门教程和使用教程，会尽可能减少概念输出而以通俗的易懂的文字阐述。</p>
+</blockquote>
+<h3 id="1-1-什么是容器技术"><a href="#1-1-什么是容器技术" class="headerlink" title="1.1 什么是容器技术"></a>1.1 什么是容器技术</h3><p>&emsp;&emsp;容器技术是虚拟化技术技术的一种，最常见的虚拟化技术莫过于虚拟机（如VMware）。容器的实现要依赖一个叫做容器引擎的东西，这样就只需要将必要的依赖打包到镜像，而不必将整个操作系统打包。如此，容器比虚拟机轻量很多。需要注意的是Docker只是容器化技术的一种实现，只是当下Docker是最火的，因此Docker成了容器化技术的代名词。准确地说，我们常使用的Docker工具是一个容器引擎。</p>
+<h2 id="2-Docker概念"><a href="#2-Docker概念" class="headerlink" title="2.Docker概念"></a>2.Docker概念</h2><p>&emsp;&emsp;Docker中最重要的概念是：<code>镜像</code>、<code>容器</code>和<code>仓库</code>。这几个概念很重要，但不必急于吃透，用一边就明白了。</p>
+<h3 id="2-1-镜像（Image）"><a href="#2-1-镜像（Image）" class="headerlink" title="2.1 镜像（Image）"></a>2.1 镜像（Image）</h3><p>&emsp;&emsp;镜像是容纳<code>依赖</code>，<code>代码</code>和<code>配置文件</code>的东西。当我们完成项目开发，就可以通过Docker将项目打包成一个镜像，然后传到服务器上通过Docker直接运行。这里只需要知道Docker镜像是一个将项目封装起来的文件即可。</p>
+<h3 id="2-2-容器（Container）"><a href="#2-2-容器（Container）" class="headerlink" title="2.2 容器（Container）"></a>2.2 容器（Container）</h3><p>&emsp;&emsp;通过Docker可以将镜像运行起来，运行镜像后会产生容器。类比Windows，镜像相当于安装包，容器相当于安装好的程序，有运行中，退出和出错等状态。</p>
+<h3 id="2-3-仓库（Repository）"><a href="#2-3-仓库（Repository）" class="headerlink" title="2.3 仓库（Repository）"></a>2.3 仓库（Repository）</h3><p>&emsp;&emsp;存镜像的地方，Docker有官方仓库，我们也可以自己搭建私有仓库。</p>
+<h2 id="3-安装Docker"><a href="#3-安装Docker" class="headerlink" title="3.安装Docker"></a>3.安装Docker</h2><h3 id="3-1-Windows安装Docker"><a href="#3-1-Windows安装Docker" class="headerlink" title="3.1 Windows安装Docker"></a>3.1 Windows安装Docker</h3><p><a target="_blank" rel="noopener" href="https://docs.docker.com/docker-for-windows/install/">Docker官网下载地址</a></p>
+<h3 id="3-2-Ubuntu安装Docker"><a href="#3-2-Ubuntu安装Docker" class="headerlink" title="3.2 Ubuntu安装Docker"></a>3.2 Ubuntu安装Docker</h3><p><a target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/ubuntu/">Docker官方手册</a><br><a target="_blank" rel="noopener" href="https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors">阿里云镜像加速器</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 卸载旧版</span></span><br><span class="line">sudo apt-get remove docker docker-engine docker.io containerd runc</span><br><span class="line"></span><br><span class="line">sudo apt-get update</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置存储库</span></span><br><span class="line">sudo apt-get install \</span><br><span class="line">    apt-transport-https \</span><br><span class="line">    ca-certificates \</span><br><span class="line">    curl \</span><br><span class="line">    gnupg \</span><br><span class="line">    lsb-release</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加Docker的官方GPG密钥</span></span><br><span class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置稳定的存储库 这里可以使用阿里云镜像加速器(见本小节开头)</span></span><br><span class="line">echo \</span><br><span class="line">  &quot;deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \</span><br><span class="line"><span class="meta">  $</span><span class="bash">(lsb_release -cs) stable<span class="string">&quot; | sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看可用版本</span></span><br><span class="line">apt-cache madison docker-ce</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装最新Docker引擎</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install docker-ce docker-ce-cli containerd.io</span><br></pre></td></tr></table></figure>
+<p><strong>如果之前没有配置镜像加速器</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p /etc/docker</span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-&#x27;EOF&#x27;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://xxxxxxxx.mirror.aliyuncs.com&quot;]	# 这里填入自己的加速地址即可</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+<p><strong>将所有用户添加至Docker组（省得频繁使用sudo）</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo usermod -aG docker $USER</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="4-Docker命令"><a href="#4-Docker命令" class="headerlink" title="4.Docker命令"></a>4.Docker命令</h2><h3 id="4-1-查看Docker状态"><a href="#4-1-查看Docker状态" class="headerlink" title="4.1 查看Docker状态"></a>4.1 查看Docker状态</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status docker</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-启动、停止Docker"><a href="#4-2-启动、停止Docker" class="headerlink" title="4.2 启动、停止Docker"></a>4.2 启动、停止Docker</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 启动</span></span><br><span class="line">sudo systemctl start docker</span><br><span class="line"><span class="meta">#</span><span class="bash"> 停止</span></span><br><span class="line">sudo systemctl stop docker</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-重载配置文件"><a href="#4-3-重载配置文件" class="headerlink" title="4.3 重载配置文件"></a>4.3 重载配置文件</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="5-镜像命令"><a href="#5-镜像命令" class="headerlink" title="5.镜像命令"></a>5.镜像命令</h2><h3 id="5-1-查看本地所有镜像"><a href="#5-1-查看本地所有镜像" class="headerlink" title="5.1 查看本地所有镜像"></a>5.1 查看本地所有镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-搜索镜像"><a href="#5-2-搜索镜像" class="headerlink" title="5.2 搜索镜像"></a>5.2 搜索镜像</h3><p>以Nginx为例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search nginx</span><br></pre></td></tr></table></figure>
+<p><code>OFFICIAL</code>代表镜像是官方镜像<br><code>STARS</code>代表镜像受欢迎程度<br><code>AUTOMATED</code>代表镜像自动构建</p>
+<h3 id="5-3-拉取镜像"><a href="#5-3-拉取镜像" class="headerlink" title="5.3 拉取镜像"></a>5.3 拉取镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull nginx</span><br></pre></td></tr></table></figure>
+<p>这样会拉取默认的镜像，即最新版。可以通过<a target="_blank" rel="noopener" href="https://hub.docker.com/">Docker Hub</a>查询镜像的所有版本（Tags）。拉取指定版本的nginx（<code>docker pull nginx:stable</code>）。</p>
+<h3 id="5-4-删除镜像"><a href="#5-4-删除镜像" class="headerlink" title="5.4 删除镜像"></a>5.4 删除镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker rmi nginx:stable</span><br><span class="line">或</span><br><span class="line">docker rmi nginx-imageId</span><br></pre></td></tr></table></figure>
+<p>如果需要根据镜像名删除镜像则必须跟上tag，通常镜像ID等价于name:tag</p>
+<h3 id="5-5-运行镜像"><a href="#5-5-运行镜像" class="headerlink" title="5.5 运行镜像"></a>5.5 运行镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 8848:80 --name my-nginx nginx:stable</span><br></pre></td></tr></table></figure>
+<ul>
+<li>docker run：运行镜像</li>
+<li>-d：以后台方式运行</li>
+<li>-p 8848:80：将<code>容器的80端口</code>映射到<code>宿主机的8848端口</code></li>
+<li>–name my-nginx：容器取名为my-nginx</li>
+<li>nginx:stable：要运行的镜像为nginx:stable</li>
+</ul>
+<p><strong>其他参数</strong></p>
+<ul>
+<li>-v：用于挂载文件</li>
+<li>–restart=always：允许容器自动启动</li>
+<li>-u root：以root身份运行容器</li>
+<li>还有一些容器自带的配置参数，具体可看Docker Hub</li>
+</ul>
+<h3 id="5-6-导出镜像"><a href="#5-6-导出镜像" class="headerlink" title="5.6 导出镜像"></a>5.6 导出镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker save -o nginx.tar nginx:stable</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-7-导入镜像"><a href="#5-7-导入镜像" class="headerlink" title="5.7 导入镜像"></a>5.7 导入镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker load -i nginx.tar</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-8-重命名镜像"><a href="#5-8-重命名镜像" class="headerlink" title="5.8 重命名镜像"></a>5.8 重命名镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag 镜像ID nginx:v1</span><br></pre></td></tr></table></figure>
+<p>重命名后原名称的镜像依然存在，需要通过<code>name:tag</code>的方式指定删除。</p>
+<h3 id="5-9-构建镜像"><a href="#5-9-构建镜像" class="headerlink" title="5.9 构建镜像"></a>5.9 构建镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t name:tag</span><br></pre></td></tr></table></figure>
+<p>如果当前目录下没有<code>Dockerfile</code>文件，则必须使用<code>-f</code>参数指明其位置。Dockerfile的名字必须也只能叫Dockerfile</p>
+<h2 id="6-容器命令"><a href="#6-容器命令" class="headerlink" title="6.容器命令"></a>6.容器命令</h2><h3 id="6-1-查看容器"><a href="#6-1-查看容器" class="headerlink" title="6.1 查看容器"></a>6.1 查看容器</h3><p>查看正在运行的容器：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure>
+<p>查看全部容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-启动、关闭容器"><a href="#6-2-启动、关闭容器" class="headerlink" title="6.2 启动、关闭容器"></a>6.2 启动、关闭容器</h3><p>启动容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker start 容器ID</span><br></pre></td></tr></table></figure>
+<p>关闭容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop 容器ID</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-3-删除容器"><a href="#6-3-删除容器" class="headerlink" title="6.3 删除容器"></a>6.3 删除容器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm 容器ID</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-4-进入容器"><a href="#6-4-进入容器" class="headerlink" title="6.4 进入容器"></a>6.4 进入容器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it 容器名 bash</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-5-修改容器内文件"><a href="#6-5-修改容器内文件" class="headerlink" title="6.5 修改容器内文件"></a>6.5 修改容器内文件</h3><p>容器内的文件不可在容器内直接修改，需要拷贝到宿主机修改，修改后再拷贝到容器覆盖原文件。另外，不可在容器之间拷贝文件。<br>拷贝docker容器文件到宿主机当前路径：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker cp 容器ID:&#x2F;...&#x2F;... .&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-6-查看容器日志"><a href="#6-6-查看容器日志" class="headerlink" title="6.6 查看容器日志"></a>6.6 查看容器日志</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker logs 容器ID</span><br></pre></td></tr></table></figure>
+<p>查看最近N行日志信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker logs 容器ID --tail 10</span><br></pre></td></tr></table></figure>
+
+<br>
+<hr>
+<center><h2>结语</h2></center>
+&emsp;&emsp;以上都是Docker常用的命令，也是需要掌握的基本命令，足够平时使用。但Docker还有更强大的容器编排功能，需要进一步学习进阶。另外，如MySQL数据库，MyPhpAdmin，Redis等，我们都可以将其部署在云服务器上，方便平时在不容电脑使用，还有`Gitee/Github + Jenkins + Docker`实现项目自动化构建和发布。
+<hr><link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Docker/" rel="tag"><i class="fa fa-tag"></i> Docker</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/26/deploy-kubernetes/" rel="prev" title="Ubuntu Server部署K8S">
+      <i class="fa fa-chevron-left"></i> Ubuntu Server部署K8S
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">1.前言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 什么是容器技术</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Docker%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text">2.Docker概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E9%95%9C%E5%83%8F%EF%BC%88Image%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 镜像（Image）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%AE%B9%E5%99%A8%EF%BC%88Container%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 容器（Container）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E4%BB%93%E5%BA%93%EF%BC%88Repository%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 仓库（Repository）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%AE%89%E8%A3%85Docker"><span class="nav-number">3.</span> <span class="nav-text">3.安装Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Windows%E5%AE%89%E8%A3%85Docker"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 Windows安装Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Ubuntu%E5%AE%89%E8%A3%85Docker"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Ubuntu安装Docker</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Docker%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">4.Docker命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E6%9F%A5%E7%9C%8BDocker%E7%8A%B6%E6%80%81"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 查看Docker状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%90%AF%E5%8A%A8%E3%80%81%E5%81%9C%E6%AD%A2Docker"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 启动、停止Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E9%87%8D%E8%BD%BD%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 重载配置文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E9%95%9C%E5%83%8F%E5%91%BD%E4%BB%A4"><span class="nav-number">5.</span> <span class="nav-text">5.镜像命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E6%9F%A5%E7%9C%8B%E6%9C%AC%E5%9C%B0%E6%89%80%E6%9C%89%E9%95%9C%E5%83%8F"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 查看本地所有镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E6%90%9C%E7%B4%A2%E9%95%9C%E5%83%8F"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 搜索镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 拉取镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E5%88%A0%E9%99%A4%E9%95%9C%E5%83%8F"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 删除镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-%E8%BF%90%E8%A1%8C%E9%95%9C%E5%83%8F"><span class="nav-number">5.5.</span> <span class="nav-text">5.5 运行镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-%E5%AF%BC%E5%87%BA%E9%95%9C%E5%83%8F"><span class="nav-number">5.6.</span> <span class="nav-text">5.6 导出镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-7-%E5%AF%BC%E5%85%A5%E9%95%9C%E5%83%8F"><span class="nav-number">5.7.</span> <span class="nav-text">5.7 导入镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-8-%E9%87%8D%E5%91%BD%E5%90%8D%E9%95%9C%E5%83%8F"><span class="nav-number">5.8.</span> <span class="nav-text">5.8 重命名镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-9-%E6%9E%84%E5%BB%BA%E9%95%9C%E5%83%8F"><span class="nav-number">5.9.</span> <span class="nav-text">5.9 构建镜像</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E5%AE%B9%E5%99%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">6.</span> <span class="nav-text">6.容器命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E6%9F%A5%E7%9C%8B%E5%AE%B9%E5%99%A8"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 查看容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E5%90%AF%E5%8A%A8%E3%80%81%E5%85%B3%E9%97%AD%E5%AE%B9%E5%99%A8"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 启动、关闭容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E5%88%A0%E9%99%A4%E5%AE%B9%E5%99%A8"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 删除容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E8%BF%9B%E5%85%A5%E5%AE%B9%E5%99%A8"><span class="nav-number">6.4.</span> <span class="nav-text">6.4 进入容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-%E4%BF%AE%E6%94%B9%E5%AE%B9%E5%99%A8%E5%86%85%E6%96%87%E4%BB%B6"><span class="nav-number">6.5.</span> <span class="nav-text">6.5 修改容器内文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-%E6%9F%A5%E7%9C%8B%E5%AE%B9%E5%99%A8%E6%97%A5%E5%BF%97"><span class="nav-number">6.6.</span> <span class="nav-text">6.6 查看容器日志</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text">结语</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="魚安行"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">魚安行</p>
+  <div class="site-description" itemprop="description"> <hr> 你永远得不到你想要的,<br> 因为没有什么是你真正想要的,<br> 你内心无法填满的缺憾、不满足感,<br> 不是因为你没有得到,<br> 而是因为你那颗无常心尚未安顿好。<br> <br> 我们必须从只想着自己转变为前调自我以外的世界 <hr> </div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/xtangyes" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;xtangyes" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:farwalking@163.com" title="E-Mail → mailto:farwalking@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xTang</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">14k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">13 分钟</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
